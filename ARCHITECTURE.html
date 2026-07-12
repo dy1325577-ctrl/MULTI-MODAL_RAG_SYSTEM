@@ -1,0 +1,670 @@
+<style>
+  :root {
+    --bg: #F9FBFD;
+    --panel: #FFFFFF;
+    --panel-2: #F0F4F9;
+    --ink: #17202F;
+    --ink-soft: #47546A;
+    --ink-faint: #8090A2;
+    --line: #DCE3EC;
+    --line-strong: #C3CCD9;
+    --flow: #0C877D;
+
+    --gpu: #C56E17;   --gpu-bg: #FBEEDA;  --gpu-ink: #8A4B08;
+    --cpu: #2A6BAF;   --cpu-bg: #E3EDF8;  --cpu-ink: #1B4A7E;
+    --store: #574DC2; --store-bg: #E9E7FB; --store-ink: #3B32A0;
+    --key: #BC2977;   --key-bg: #FAE2EE;  --key-ink: #911857;
+    --io: #0C877D;    --io-bg: #DDF2EF;   --io-ink: #095A53;
+
+    --radius: 11px;
+    --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --font-mono: ui-monospace, "Cascadia Code", "SF Mono", "Consolas", monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0D1017;
+      --panel: #161B25;
+      --panel-2: #1B212E;
+      --ink: #E6ECF4;
+      --ink-soft: #AAB6C7;
+      --ink-faint: #6C7A90;
+      --line: #29313F;
+      --line-strong: #3A4355;
+      --flow: #3DBBAE;
+
+      --gpu: #E59A4E;   --gpu-bg: #2C2013;  --gpu-ink: #F0B473;
+      --cpu: #5C9AD6;   --cpu-bg: #122335;  --cpu-ink: #92C2E9;
+      --store: #8B83E6; --store-bg: #1D1A38; --store-ink: #B6AFF3;
+      --key: #E85CA1;   --key-bg: #32152F;  --key-ink: #F28EC1;
+      --io: #3DBBAE;    --io-bg: #0D2926;   --io-ink: #71D9CC;
+    }
+  }
+
+  :root[data-theme="light"] {
+    --bg: #F9FBFD; --panel: #FFFFFF; --panel-2: #F0F4F9;
+    --ink: #17202F; --ink-soft: #47546A; --ink-faint: #8090A2;
+    --line: #DCE3EC; --line-strong: #C3CCD9; --flow: #0C877D;
+    --gpu: #C56E17; --gpu-bg: #FBEEDA; --gpu-ink: #8A4B08;
+    --cpu: #2A6BAF; --cpu-bg: #E3EDF8; --cpu-ink: #1B4A7E;
+    --store: #574DC2; --store-bg: #E9E7FB; --store-ink: #3B32A0;
+    --key: #BC2977; --key-bg: #FAE2EE; --key-ink: #911857;
+    --io: #0C877D; --io-bg: #DDF2EF; --io-ink: #095A53;
+  }
+  :root[data-theme="dark"] {
+    --bg: #0D1017; --panel: #161B25; --panel-2: #1B212E;
+    --ink: #E6ECF4; --ink-soft: #AAB6C7; --ink-faint: #6C7A90;
+    --line: #29313F; --line-strong: #3A4355; --flow: #3DBBAE;
+    --gpu: #E59A4E; --gpu-bg: #2C2013; --gpu-ink: #F0B473;
+    --cpu: #5C9AD6; --cpu-bg: #122335; --cpu-ink: #92C2E9;
+    --store: #8B83E6; --store-bg: #1D1A38; --store-ink: #B6AFF3;
+    --key: #E85CA1; --key-bg: #32152F; --key-ink: #F28EC1;
+    --io: #3DBBAE; --io-bg: #0D2926; --io-ink: #71D9CC;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 44px 24px 72px;
+  }
+
+  /* ---------- header ---------- */
+  header { margin-bottom: 34px; }
+  .eyebrow {
+    font-size: 0.72rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--flow);
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-size: clamp(1.7rem, 4vw, 2.35rem);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    font-weight: 700;
+    margin: 0 0 12px;
+    text-wrap: balance;
+  }
+  .lede {
+    max-width: 60ch;
+    color: var(--ink-soft);
+    font-size: 1.02rem;
+    margin: 0;
+  }
+
+  /* ---------- legend ---------- */
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin-top: 22px;
+    padding: 14px 16px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+  }
+  .legend__item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.82rem;
+    color: var(--ink-soft);
+  }
+  .swatch {
+    width: 13px; height: 13px;
+    border-radius: 4px;
+    flex: none;
+    border: 1px solid rgba(0,0,0,0.12);
+  }
+  .swatch--gpu { background: var(--gpu); }
+  .swatch--cpu { background: var(--cpu); }
+  .swatch--store { background: var(--store); }
+  .swatch--key { background: var(--key); }
+  .swatch--io { background: var(--io); }
+
+  /* ---------- section framing ---------- */
+  .phase { margin-top: 30px; }
+  .phase__head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .phase__num {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--flow);
+    letter-spacing: 0.04em;
+  }
+  .phase__title {
+    font-size: 1.18rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin: 0;
+  }
+  .phase__tag {
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding: 2px 9px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+  }
+  .phase__note {
+    color: var(--ink-soft);
+    font-size: 0.9rem;
+    margin: 2px 0 18px;
+    max-width: 66ch;
+  }
+
+  .board {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 24px 22px;
+  }
+  .board--store {
+    background: var(--store-bg);
+    border-color: color-mix(in srgb, var(--store) 30%, transparent);
+  }
+
+  /* ---------- nodes ---------- */
+  .node {
+    position: relative;
+    background: var(--panel-2);
+    border: 1px solid var(--line-strong);
+    border-left: 4px solid var(--ink-faint);
+    border-radius: var(--radius);
+    padding: 11px 13px;
+    min-width: 0;
+  }
+  .board--store .node { background: var(--panel); }
+  .node__title {
+    font-size: 0.92rem;
+    font-weight: 650;
+    letter-spacing: -0.005em;
+  }
+  .node__meta {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+    margin-top: 3px;
+    word-break: break-word;
+  }
+  .node__sub {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .node--gpu { border-left-color: var(--gpu); }
+  .node--cpu { border-left-color: var(--cpu); }
+  .node--store { border-left-color: var(--store); }
+  .node--key {
+    border-left-color: var(--key);
+    background: var(--key-bg);
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--key) 22%, transparent);
+  }
+  .node--io { border-left-color: var(--io); background: var(--io-bg); }
+
+  .chip {
+    position: absolute;
+    top: 9px; right: 9px;
+    font-family: var(--font-mono);
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    padding: 1px 6px;
+    border-radius: 5px;
+  }
+  .chip--gpu { background: var(--gpu-bg); color: var(--gpu-ink); border: 1px solid color-mix(in srgb, var(--gpu) 35%, transparent); }
+  .chip--cpu { background: var(--cpu-bg); color: var(--cpu-ink); border: 1px solid color-mix(in srgb, var(--cpu) 35%, transparent); }
+  .node--io .node__title, .node--io .node__meta { color: var(--io-ink); }
+
+  /* ---------- flow arrows ---------- */
+  .arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--flow);
+    font-size: 1.1rem;
+    line-height: 1;
+    user-select: none;
+  }
+  .arrow--v { padding: 7px 0; }
+  .arrow--v::before { content: "↓"; }
+  .arrow--h { padding: 0 4px; }
+  .arrow--h::before { content: "→"; }
+  .arrow__label {
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    font-style: italic;
+  }
+  .split-note {
+    text-align: center;
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    padding: 10px 0 4px;
+  }
+
+  /* ---------- lane grid (indexing) ---------- */
+  .lanes {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .lane {
+    border: 1px dashed var(--line-strong);
+    border-radius: 12px;
+    padding: 13px 12px 15px;
+    display: flex;
+    flex-direction: column;
+    background: color-mix(in srgb, var(--panel-2) 45%, transparent);
+  }
+  .lane__label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 10px;
+  }
+  .lane .node { width: 100%; }
+
+  .branch {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+  .branch-note {
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+    text-align: center;
+    padding: 6px 0 2px;
+  }
+
+  /* ---------- storage row ---------- */
+  .stores {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .store-card { display: flex; flex-direction: column; height: 100%; }
+  .store-card .node__list {
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .store-card .node__list li {
+    font-size: 0.8rem;
+    color: var(--ink-soft);
+    padding-left: 14px;
+    position: relative;
+  }
+  .store-card .node__list li::before {
+    content: "";
+    position: absolute; left: 0; top: 8px;
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--store);
+  }
+  .store-meta {
+    margin-top: auto;
+    padding-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--ink-faint);
+  }
+
+  .band-caption {
+    text-align: center;
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--store-ink);
+    letter-spacing: 0.02em;
+    padding: 6px 0;
+  }
+
+  /* ---------- query paths ---------- */
+  .paths { display: flex; flex-direction: column; gap: 10px; }
+  .path {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--panel-2);
+  }
+  .path--key {
+    background: var(--key-bg);
+    border-color: color-mix(in srgb, var(--key) 32%, transparent);
+  }
+  .path__tag {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 700;
+    color: var(--flow);
+    flex: none;
+    width: 20px;
+  }
+  .path--key .path__tag { color: var(--key); }
+  .pill {
+    font-size: 0.8rem;
+    padding: 4px 9px;
+    border-radius: 7px;
+    background: var(--panel);
+    border: 1px solid var(--line-strong);
+    white-space: nowrap;
+  }
+  .pill--mono { font-family: var(--font-mono); font-size: 0.74rem; }
+  .pill--gpu { border-left: 3px solid var(--gpu); }
+  .pill--cpu { border-left: 3px solid var(--cpu); }
+  .pill--target { background: var(--store-bg); border-color: color-mix(in srgb, var(--store) 30%, transparent); font-weight: 600; }
+  .path__why {
+    flex-basis: 100%;
+    font-size: 0.74rem;
+    color: var(--key-ink);
+    font-style: italic;
+    padding-top: 2px;
+  }
+
+  .converge {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 6px;
+  }
+  .stack-node { max-width: 620px; margin: 0 auto; width: 100%; }
+
+  .callout {
+    margin-top: 18px;
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    background: var(--key-bg);
+    border: 1px solid color-mix(in srgb, var(--key) 30%, transparent);
+  }
+  .callout__mark { color: var(--key); font-weight: 700; flex: none; }
+  .callout p { margin: 0; font-size: 0.88rem; color: var(--ink-soft); }
+  .callout strong { color: var(--key-ink); }
+
+  /* ---------- footer budget ---------- */
+  .budget {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .stat {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 15px 16px;
+  }
+  .stat__k {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ink-faint);
+    font-weight: 600;
+  }
+  .stat__v {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-top: 4px;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat__v small { font-weight: 500; color: var(--ink-soft); font-size: 0.82rem; }
+
+  .foot {
+    margin-top: 22px;
+    font-size: 0.8rem;
+    color: var(--ink-faint);
+    text-align: center;
+  }
+  .foot code { font-family: var(--font-mono); color: var(--ink-soft); }
+
+  @media (max-width: 720px) {
+    .lanes, .stores { grid-template-columns: 1fr; }
+    .branch { grid-template-columns: 1fr; }
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal { opacity: 0; transform: translateY(10px); animation: rise 0.5s ease forwards; }
+    .phase:nth-of-type(1) .reveal { animation-delay: 0.05s; }
+    @keyframes rise { to { opacity: 1; transform: none; } }
+  }
+</style>
+
+<div class="wrap">
+  <header>
+    <p class="eyebrow">Local Multimodal RAG · RTX 3050 6 GB</p>
+    <h1>Multimodal RAG — System Architecture</h1>
+    <p class="lede">A PDF of text, tables, and images becomes two searchable spaces. A user asks with text <em>and</em> an image; four retrieval paths converge, and a 4-bit vision model answers from what they hit.</p>
+
+    <div class="legend" aria-label="Colour key">
+      <span class="legend__item"><span class="swatch swatch--gpu"></span> Runs on GPU</span>
+      <span class="legend__item"><span class="swatch swatch--cpu"></span> Runs on CPU</span>
+      <span class="legend__item"><span class="swatch swatch--store"></span> Persistent storage</span>
+      <span class="legend__item"><span class="swatch swatch--key"></span> "Similar image" path</span>
+      <span class="legend__item"><span class="swatch swatch--io"></span> User-facing I/O</span>
+    </div>
+  </header>
+
+  <!-- ============ PHASE 1 — INDEXING ============ -->
+  <section class="phase">
+    <div class="phase__head">
+      <span class="phase__num">PHASE 1</span>
+      <h2 class="phase__title">Indexing</h2>
+      <span class="phase__tag">Offline · once per PDF</span>
+    </div>
+    <p class="phase__note">Runs once when a PDF is uploaded. Every stage is cached to disk, so you pay this cost a single time. The parser splits the document into three element streams that flow down into storage.</p>
+
+    <div class="board reveal">
+      <div class="node node--io" style="max-width:340px;margin:0 auto;">
+        <div class="node__title">Source PDF</div>
+        <div class="node__meta">data/source.pdf — text · tables · images</div>
+      </div>
+
+      <div class="arrow arrow--v"></div>
+
+      <div class="node node--cpu" style="max-width:420px;margin:0 auto;">
+        <span class="chip chip--cpu">CPU</span>
+        <div class="node__title">unstructured — layout parser</div>
+        <div class="node__meta">partition_pdf(strategy="hi_res")</div>
+        <div class="node__sub">Detects and separates typed elements with layout awareness</div>
+      </div>
+
+      <div class="split-note">↓ splits into three element streams ↓</div>
+
+      <div class="lanes">
+        <!-- TEXT LANE -->
+        <div class="lane">
+          <div class="lane__label">Text stream</div>
+          <div class="node"><div class="node__title">Text blocks</div></div>
+          <div class="arrow arrow--v"></div>
+          <div class="node node--cpu"><span class="chip chip--cpu">CPU</span><div class="node__title">Chunk by title</div><div class="node__meta">~1500 chars · overlap</div></div>
+          <div class="arrow arrow--v"></div>
+          <div class="node node--cpu"><span class="chip chip--cpu">CPU</span><div class="node__title">bge-small embed</div><div class="node__meta">→ Index A</div></div>
+        </div>
+
+        <!-- TABLE LANE -->
+        <div class="lane">
+          <div class="lane__label">Table stream</div>
+          <div class="node"><div class="node__title">Table → HTML</div><div class="node__meta">text_as_html</div></div>
+          <div class="arrow arrow--v"></div>
+          <div class="node node--gpu"><span class="chip chip--gpu">GPU</span><div class="node__title">VLM summary</div><div class="node__meta">Qwen2.5-VL-3B</div></div>
+          <div class="arrow arrow--v"></div>
+          <div class="branch">
+            <div class="node node--cpu"><div class="node__title">bge embed</div><div class="node__meta">→ Index A</div></div>
+            <div class="node node--store"><div class="node__title">Raw HTML</div><div class="node__meta">→ Docstore</div></div>
+          </div>
+        </div>
+
+        <!-- IMAGE LANE -->
+        <div class="lane">
+          <div class="lane__label">Image stream</div>
+          <div class="node"><div class="node__title">Image</div><div class="node__meta">saved as .png</div></div>
+          <div class="branch-note">one image → two encodings</div>
+          <div class="branch">
+            <div class="node node--gpu"><span class="chip chip--gpu">GPU</span><div class="node__title">VLM summary</div><div class="node__meta">→ bge → Index A</div></div>
+            <div class="node node--cpu"><span class="chip chip--cpu">CPU</span><div class="node__title">CLIP image tower</div><div class="node__meta">→ Index B</div></div>
+          </div>
+          <div class="arrow arrow--v"></div>
+          <div class="node node--store"><div class="node__title">Raw image file</div><div class="node__meta">→ Docstore</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="arrow arrow--v" style="font-size:1.5rem;"></div>
+
+  <!-- ============ STORAGE HUB ============ -->
+  <section class="phase">
+    <div class="phase__head">
+      <h2 class="phase__title" style="color:var(--store-ink);">Storage — the shared hub</h2>
+      <span class="phase__tag">Persistent on disk</span>
+    </div>
+    <p class="phase__note">Phase 1 writes here; Phase 2 reads from here. Two vector spaces plus a raw-payload store. <strong>Metadata is stored as fields, never embedded</strong> — that is what keeps the "images + tables + metadata" problem from tangling the embedding space.</p>
+
+    <div class="board board--store reveal">
+      <div class="band-caption">▲ Indexing writes into these three stores ▲</div>
+      <div class="stores">
+        <div class="node node--store store-card">
+          <div class="node__title">Index A — Text space</div>
+          <div class="node__meta">Chroma · bge-small · cosine</div>
+          <ul class="node__list">
+            <li>Text chunks</li>
+            <li>Table summaries</li>
+            <li>Image summaries</li>
+          </ul>
+          <div class="store-meta">meta: doc_id · type · page</div>
+        </div>
+
+        <div class="node node--store store-card">
+          <div class="node__title">Index B — Visual space</div>
+          <div class="node__meta">Chroma · CLIP · cosine</div>
+          <ul class="node__list">
+            <li>Raw PDF image vectors</li>
+            <li>Shared image↔text space</li>
+          </ul>
+          <div class="store-meta">meta: doc_id · page · path</div>
+        </div>
+
+        <div class="node node--store store-card">
+          <div class="node__title">Docstore</div>
+          <div class="node__meta">docstore.json</div>
+          <ul class="node__list">
+            <li>Raw table HTML</li>
+            <li>Raw image files</li>
+          </ul>
+          <div class="store-meta">key: doc_id → payload</div>
+        </div>
+      </div>
+      <div class="band-caption">▼ Query reads out of them by doc_id ▼</div>
+    </div>
+  </section>
+
+  <div class="arrow arrow--v" style="font-size:1.5rem;"></div>
+
+  <!-- ============ PHASE 2 — QUERY ============ -->
+  <section class="phase">
+    <div class="phase__head">
+      <span class="phase__num">PHASE 2</span>
+      <h2 class="phase__title">Query</h2>
+      <span class="phase__tag">Online · per message</span>
+    </div>
+    <p class="phase__note">The user sends text and (optionally) an image from the dashboard. It fans into four retrieval paths that hit the two indexes, the results are fused, and the raw payloads are pulled back for the answer.</p>
+
+    <div class="board reveal">
+      <div class="node node--io" style="max-width:420px;margin:0 auto;">
+        <div class="node__title">User input — text + image</div>
+        <div class="node__meta">Streamlit · st.chat_input + st.file_uploader</div>
+      </div>
+
+      <div class="split-note">↓ fans into four retrieval paths ↓</div>
+
+      <div class="paths">
+        <div class="path">
+          <span class="path__tag">1</span>
+          <span class="pill">query text</span><span class="arrow arrow--h"></span>
+          <span class="pill pill--mono pill--cpu">bge</span><span class="arrow arrow--h"></span>
+          <span class="pill pill--target">Index A</span>
+        </div>
+        <div class="path">
+          <span class="path__tag">2</span>
+          <span class="pill">query text</span><span class="arrow arrow--h"></span>
+          <span class="pill pill--mono pill--cpu">CLIP text tower</span><span class="arrow arrow--h"></span>
+          <span class="pill pill--target">Index B</span>
+        </div>
+        <div class="path path--key">
+          <span class="path__tag">3</span>
+          <span class="pill">query image</span><span class="arrow arrow--h"></span>
+          <span class="pill pill--mono pill--cpu">CLIP image tower</span><span class="arrow arrow--h"></span>
+          <span class="pill pill--target">Index B</span>
+          <span class="path__why">★ Semantic image match — finds the PDF image even when the query image is only <em>similar</em>, not identical.</span>
+        </div>
+        <div class="path path--key">
+          <span class="path__tag">4</span>
+          <span class="pill">query image</span><span class="arrow arrow--h"></span>
+          <span class="pill pill--mono pill--gpu">VLM caption</span><span class="arrow arrow--h"></span>
+          <span class="pill pill--mono pill--cpu">bge</span><span class="arrow arrow--h"></span>
+          <span class="pill pill--target">Index A</span>
+          <span class="path__why">★ Second chance via text — describes the image, then matches its meaning against summaries.</span>
+        </div>
+      </div>
+
+      <div class="arrow arrow--v"></div>
+      <div class="converge">
+        <div class="node node--cpu stack-node"><span class="chip chip--cpu">CPU</span><div class="node__title">Reciprocal Rank Fusion</div><div class="node__meta">score(d) = Σ 1 / (60 + rank)</div><div class="node__sub">Merges all four ranked lists · dedupes by doc_id · keeps top-k</div></div>
+        <div class="arrow arrow--v"></div>
+        <div class="node node--store stack-node"><div class="node__title">Hydrate from Docstore</div><div class="node__meta">doc_id → raw tables + image files</div><div class="node__sub">Also pulls same-page neighbour text for any retrieved image</div></div>
+        <div class="arrow arrow--v"></div>
+        <div class="node stack-node"><div class="node__title">Assemble multimodal prompt</div><div class="node__sub">user text + user image + retrieved chunks + retrieved images + table HTML  ·  ≤ 3 images total</div></div>
+        <div class="arrow arrow--v"></div>
+        <div class="node node--gpu stack-node"><span class="chip chip--gpu">GPU</span><div class="node__title">Qwen2.5-VL-3B — generate</div><div class="node__meta">4-bit NF4 · grounded, cites page numbers</div></div>
+        <div class="arrow arrow--v"></div>
+        <div class="node node--io stack-node"><div class="node__title">Answer + retrieved-context panel</div><div class="node__meta">streamed to the Streamlit dashboard</div></div>
+      </div>
+
+      <div class="callout">
+        <span class="callout__mark">★</span>
+        <p><strong>Why the "similar image" requirement is met:</strong> paths 3 and 4 both start from the user's image. CLIP similarity is semantic rather than pixel-exact, so a redrawn or screenshotted chart still lands near the original — and the VLM-caption path catches whatever CLIP misses.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ BUDGET ============ -->
+  <section class="phase">
+    <div class="phase__head">
+      <h2 class="phase__title">The 6 GB VRAM budget</h2>
+    </div>
+    <div class="budget">
+      <div class="stat"><div class="stat__k">On GPU</div><div class="stat__v">≈ 4.5–5 GB <small>Qwen2.5-VL-3B, 4-bit</small></div></div>
+      <div class="stat"><div class="stat__k">On CPU</div><div class="stat__v">bge + CLIP <small>~0.7 GB RAM</small></div></div>
+      <div class="stat"><div class="stat__k">Headroom rule</div><div class="stat__v">≤ 3 images <small>per generation call</small></div></div>
+      <div class="stat"><div class="stat__k">Model cost</div><div class="stat__v">$0 <small>fully local, offline</small></div></div>
+    </div>
+    <p class="foot">The vision model is the only thing on the GPU — both embedders are pinned to <code>device="cpu"</code>. That single split is what makes the whole system fit on the RTX 3050.</p>
+  </section>
+</div>

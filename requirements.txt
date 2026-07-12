@@ -1,0 +1,31 @@
+# ---------------------------------------------------------------------------
+# IMPORTANT: install PyTorch FIRST, from the CUDA (cu121) index, so you get the
+# GPU build rather than the CPU build PyPI would hand you on Windows:
+#
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+#
+# THEN run:  pip install -r requirements.txt
+# (torch is already satisfied, so nothing here downgrades it.)
+# ---------------------------------------------------------------------------
+
+# --- Hugging Face model stack ---
+transformers>=4.49.0
+accelerate>=0.34.0
+bitsandbytes>=0.43.0
+huggingface_hub>=0.24.0
+qwen-vl-utils
+
+# --- PDF parsing (needs poppler + tesseract from conda-forge) ---
+unstructured[pdf]>=0.14.0
+unstructured-inference        # required for the hi_res layout model
+pillow
+
+# --- Embeddings + vector store ---
+sentence-transformers>=3.0.0
+chromadb>=0.5.0
+
+# --- Dashboard + utilities ---
+streamlit>=1.36.0
+python-dotenv
+tqdm
+numpy

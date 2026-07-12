@@ -1,0 +1,10 @@
+# Disable Streamlit's source file-watcher. Its auto-reload logic inspects
+# `torch.classes`, which raises and can drop the server connection with a
+# torch-heavy app like this one ("Connection error / CONNECTING"). Turning it
+# off makes the server stable; you just won't get auto-reload on code edits
+# (restart manually after changing app.py).
+[server]
+fileWatcherType = "none"
+
+[browser]
+gatherUsageStats = false
